@@ -1,7 +1,7 @@
 <?php 
 
 	/*Security*/
-	define('SECRETE_KEY', 'mySuperSecretKey');
+	define('SECRETE_KEY', 'KEaWrHUFG5*$WIivjIzZ0Cg*');
 	
 	/*Data Type*/
 	define('BOOLEAN', 	'1');
@@ -19,6 +19,7 @@
 	define('API_DOST_NOT_EXIST', 					107);
 	define('INVALID_USER_PASS', 					400);
 	define('LOGIN_FAILED',		 					401);
+	define('UNAUTHORIZED',		 					401);
 	define('USER_NOT_ACTIVE', 						109);
 
 	define('SUCCESS_RESPONSE', 						200);
@@ -27,5 +28,5 @@
 
 	define('JWT_PROCESSING_ERROR',					300);
 	define('ATHORIZATION_HEADER_NOT_FOUND',			301);
-	define('ACCESS_TOKEN_ERRORS',					302);	
+	define('ACCESS_TOKEN_ERRORS',					302);
 ?>
