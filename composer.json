@@ -8,6 +8,7 @@
 		"phpunit/phpunit": "^9"
 	},
 	"require": {
-		"firebase/php-jwt": "^5.3"
+		"firebase/php-jwt": "^5.3",
+		"guzzlehttp/guzzle": "^7.0"
 	}
 }

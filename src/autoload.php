@@ -1,16 +1,22 @@
 <?php 
 	spl_autoload_register(function($className){
-		$srcPath = scandir("./vendor/firebase/php-jwt/src");
-		foreach ($srcPath as $subdirClass) {
-			if ($subdirClass != "." && $subdirClass != "..") {
-				require_once("./vendor/firebase/php-jwt/src/".$subdirClass);
+		$srcPaths[] = './vendor/firebase/php-jwt/src/';
+		$srcPaths[] = './vendor/guzzlehttp/guzzle/src/';
+		$srcPaths[] = './vendor/guzzlehttp/guzzle/src/Cookie/';
+		$srcPaths[] = './vendor/guzzlehttp/guzzle/src/Exception/';
+		$srcPaths[] = './vendor/guzzlehttp/guzzle/src/Handler/';
+		$srcPaths[] = './class/';
+		$srcPaths[] = './config/';
+
+		foreach ($srcPaths as $srcPath) {
+			$srcPathFiles = scandir($srcPath);
+			foreach ($srcPathFiles as $subdirClass) {
+				// per src di guzzle bisogna far saltare le cartelle
+				// quindi subdirClass deve contenere .php
+				if ($subdirClass != "." && $subdirClass != "..") {
+					require_once($srcPath.$subdirClass);
+				}
 			}
-		}
-		$path = strtolower($className) . ".php";
-		if(file_exists($path)) {
-			require_once($path);
-		} else {
-			echo "File $path is not found.";
 		}
 	})
 
