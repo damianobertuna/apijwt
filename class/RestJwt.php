@@ -19,8 +19,8 @@ class RestJwt {
      */
     public function __construct(Response $responseObj) 
     {
-        $this->databaseObj = new Database();
         $this->responseObj = $responseObj;
+        $this->databaseObj = new Database($responseObj);
 
         if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->responseObj->setStatus(REQUEST_METHOD_NOT_VALID);
@@ -29,10 +29,8 @@ class RestJwt {
 
         $handler = fopen('php://input', 'r');
         $this->request = stream_get_contents($handler);
+        
         $this->validateRequest();
-        /*if( 'generatetoken' != strtolower( $this->actionName) ) {
-            $this->validateToken();
-        }*/
     }
 
     /**
@@ -70,7 +68,7 @@ class RestJwt {
     {        
         try {
             $this->jwtToken = $this->getBearerToken();
-		    $payload = JWT::decode($this->jwtToken, SECRETE_KEY, ['HS256']);
+		    JWT::decode($this->jwtToken, SECRETE_KEY, ['HS256']);
         } catch (Exception $e) {
             /* before launching an exception we verify the refresh token */
             if (array_key_exists("JwtRefreshToken", $_COOKIE)) {
@@ -80,7 +78,7 @@ class RestJwt {
                  * if it is still valid
                  */
                 if ($this->validateRefreshToken()) {
-                    $payload = JWT::decode($this->jwtRefreshToken, SECRETE_KEY, ['HS256']);
+                    JWT::decode($this->jwtRefreshToken, SECRETE_KEY, ['HS256']);
                     $newJwtToken = $this->generateToken();
                     $this->jwtToken = $newJwtToken;
                     return true;
@@ -142,6 +140,7 @@ class RestJwt {
                 $headers = trim($requestHeaders['Authorization']);
             }
         }
+        
         return $headers;
     }
 
@@ -170,7 +169,7 @@ class RestJwt {
      * Method that generates a JWT token
      * @param int $time
      */
-    public function generateToken(int $time=60) 
+    public function generateToken(int $time=3600) 
     {
         try {
             $paylod = [
@@ -189,10 +188,10 @@ class RestJwt {
     /**
      * Get response utility
      */
-    public function getResponse() 
+    /*public function getResponse() 
     {
         return json_encode(['response' => ['status'=>$this->responseCode, 'message'=>$this->responseMessage, 'token' => $this->jwtToken, 'resource' => $this->resource]]);
-    }
+    }*/
 
     /**
      * @param string $errorName

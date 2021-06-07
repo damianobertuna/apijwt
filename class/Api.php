@@ -59,9 +59,12 @@ class Api extends RestJwt {
         }
         
         // create and return JWT token and JWT refresh token        
-        $this->responseCode     = SUCCESS_RESPONSE;
-        $this->responseMessage  = "Login success";
-        $this->jwtToken         = $this->generateToken();
+        $this->responseObj->setStatus(SUCCESS_RESPONSE);
+        $this->responseObj->setMessage("Login success");
+        $this->responseObj->setToken($this->generateToken());
+        //$this->responseCode     = SUCCESS_RESPONSE;
+        //$this->responseMessage  = "Login success";
+        //$this->jwtToken         = $this->generateToken();
         $this->jwtRefreshToken  = $this->generateToken(60*60*24*7); /* 604800 seconds = 7 days */
         setcookie("JwtRefreshToken", $this->jwtRefreshToken, 604800, "", "", false, true); /* last true param is for HTTPONLY */
         /* save jwtRefreshToken to database */
@@ -89,10 +92,18 @@ class Api extends RestJwt {
     public function actionGetResource() {
         /* verify token */
         if ($this->validateToken()) {
-            $this->responseCode     = SUCCESS_RESPONSE;
-            $this->responseMessage  = "Valid resource request";
+            /**
+             * Dummy code for testing purpose only. It's necessary to verify the user profile in
+             * order to be sure that this action is allowed
+             */
+            $this->responseObj->setStatus(SUCCESS_RESPONSE);
+            $this->responseObj->setMessage("Login success");
+            $this->responseObj->setToken($this->jwtToken);
             /* before sending the resource we need to check if the user has permission */
-            $this->resource = "Here is the resource requested";
+            $this->responseObj->setResource('Here is the resource requested');
+            /*$this->responseCode     = SUCCESS_RESPONSE;
+            $this->responseMessage  = "Valid resource request";*/
+            //$this->resource = "Here is the resource requested";
         }
 
         /* get the resource from the database */
@@ -110,9 +121,7 @@ class Api extends RestJwt {
         }
     */    
     /**
-     * Method for password change
-     *
-     * 
+     * Method for password changing
      */ 
     public function actionChangePassword() {
         if ($this->validateToken()) {
@@ -133,7 +142,7 @@ class Api extends RestJwt {
             $oldPassword    = $request->param->oldPassword;
 
             /* check if param newPassword exists */
-            if (!is_object($request->param) || !property_exists($request->param, 'newPassword')) {
+            if (!is_object($request->param) || !property_exists($request->param, 'newPassword') || $request->param->newPassword == '') {
                 $this->responseObj->setStatus(API_PARAM_REQUIRED);
                 throw new Exception($this->getErrorMessage('api_new_password_required'));            
             }

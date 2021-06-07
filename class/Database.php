@@ -6,27 +6,31 @@
 class Database
 {
     private $dbconn;
+    private $responseObj;
 
     /**
      * Database constructor.     
      */
-    public function __construct()
+    public function __construct($responseObj)
     {
         /*global $user;
         global $password;
         global $host;
         global $dbname;*/
-        $user       = "root";
-        $password   = "1234qwer";
-        $dbname     = "apijwt";
-        $host       = "localhost";
+        $user               = "root";
+        $password           = "1234qwer";
+        $dbname             = "apijwt";
+        $host               = "localhost";
+        $this->responseObj  = $responseObj;
 
         try {
             $conn = new PDO('mysql:host=' .$host .';dbname=' . $dbname, $user, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->dbconn = $conn;
         } catch (PDOException $pdo) {
-            throw new PDOException(json_encode(['response' => ['status'=>DATABASE_CONNECTION_FAILED, 'message'=>$pdo->getMessage(), 'token' => '', 'resource' => '']]));            
+            $this->responseObj->setStatus(DATABASE_CONNECTION_FAILED);
+            $this->responseObj->setMessage($pdo->getMessage());
+            throw new PDOException($pdo->getMessage());            
         }
     }
 

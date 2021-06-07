@@ -80,7 +80,10 @@ final class ApiTest extends TestCase
         }
     }
 
-    public function test_change_password_new_not_empty(): void
+    /**
+     * to pass this test is mandatory to insert on the header a valid API key
+     */
+    public function test_change_new_password_not_empty(): void
     {   
         $loginJson = array(
             "name"  => "actionChangePassword",
@@ -92,24 +95,36 @@ final class ApiTest extends TestCase
         );
 
         $client = new GuzzleHttp\Client();
-        $jar = \GuzzleHttp\Cookie\CookieJar::fromArray(
-            [
-                'JwtRefreshToken' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjI5NjAyMzAsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzU2NTAzMH0.wTbwVq8dg6718-E4f9FFv5SS-xwq6YfhSXf7rWtazUw',
-            ],
-            'localhost'
-        );
+    
         try {      
             $res = $client->request('POST', 'localhost/apijwt/index.php', [
-                'json' => $loginJson,
-                'cookies' => $jar
+                'headers'   => [
+                    'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjMwMDY4ODAsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzAxMDQ4MH0.py09aiKY4mJYVGYnA87s-RoU6KXJgzjcwYEf170dWPo'
+                ],
+                'json'      => $loginJson,
+                //'cookies'   => $jar,
             ]);
         } catch (ServerException $e) {
             $response = $e->getResponse();
             $responseBodyAsString   = $response->getBody()->getContents();
             $responseBodyAsObj      = json_decode($responseBodyAsString);
-            var_dump($responseBodyAsObj);
             $this->assertEquals(500, $responseBodyAsObj->response->status);
-            $this->assertEquals("Access Token Not found", $responseBodyAsObj->response->message);
+            $this->assertEquals("API param new password is required", $responseBodyAsObj->response->message);
+        }
+    }
+
+    public function test_only_post_request_is_valid(): void 
+    {        
+        $client = new GuzzleHttp\Client();
+    
+        try {      
+            $res = $client->request('GET', 'localhost/apijwt/index.php');
+        } catch (Exception $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString   = $response->getBody()->getContents();
+            $responseBodyAsObj      = json_decode($responseBodyAsString);
+            $this->assertEquals(400, $responseBodyAsObj->response->status);
+            $this->assertEquals("Request Method is not valid", $responseBodyAsObj->response->message);
         }
     }
 

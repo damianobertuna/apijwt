@@ -8,11 +8,10 @@ $responseObj = new Response;
 try {		
 	$api = new Api($responseObj);
 	$api->processApi();
-	echo $api->getResponse();
 } catch (PDOException $pdo) {
-	echo $pdo->getMessage();
 } catch (Exception $e) {
 	$responseObj->setMessage($e->getMessage());		
 	http_response_code($responseObj->getStatus());
+} finally {
 	echo $responseObj->toJson();
 }
