@@ -1,7 +1,10 @@
 <?php
 class Api extends RestJwt {
 
-    public function __construct($responseObj) 
+    /**
+     * @param Response $responseObj
+     */
+    public function __construct(Response $responseObj) 
     {
         parent::__construct($responseObj);
     }
@@ -17,7 +20,6 @@ class Api extends RestJwt {
     */
     /**
      * Method to handle login action
-     * 
      */
     public function actionLogin() 
     {
@@ -85,7 +87,7 @@ class Api extends RestJwt {
              * order to be sure that this action is allowed
              */
             $this->responseObj->setStatus(SUCCESS_RESPONSE);
-            $this->responseObj->setMessage("Login success");
+            $this->responseObj->setMessage("Get resource allowed");
             $this->responseObj->setToken($this->jwtToken);
             /* before sending the resource we need to check if the user has permission */
             $this->responseObj->setResource('Here is the resource requested');            

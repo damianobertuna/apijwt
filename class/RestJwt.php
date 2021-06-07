@@ -72,8 +72,6 @@ class RestJwt {
         return true;
     }
 
-    //JwtRefreshToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjI4ODcwMDUsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzQ5MTgwNX0.yw4oLQ2pXriJbuJ-n9bOUecPciIYMZDydS4ZGdIOir0; expires=Thu, 08-Jan-1970 00:00:00 GMT; Max-Age=0; HttpOnly
-
     /**
      * Method to validate the JWT refresh token
      */
@@ -89,8 +87,7 @@ class RestJwt {
     /**
      * Get the token from the request header
      */
-    public function getBearerToken() 
-    {
+    public function getBearerToken() {
         $headers = $this->getAuthorizationHeader();
         
         if (!empty($headers)) {
@@ -106,8 +103,7 @@ class RestJwt {
     /**
      * Get the header from the request
      */
-    public function getAuthorizationHeader()
-    {
+    public function getAuthorizationHeader() {
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
             $headers = trim($_SERVER["Authorization"]);
@@ -116,7 +112,6 @@ class RestJwt {
             $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
         } elseif (function_exists('apache_request_headers')) {
             $requestHeaders = apache_request_headers();
-            // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
             $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
             if (isset($requestHeaders['Authorization'])) {
                 $headers = trim($requestHeaders['Authorization']);
@@ -166,14 +161,6 @@ class RestJwt {
             throw new Exception($e->getMessage());            
         }
     }
-
-    /**
-     * Get response utility
-     */
-    /*public function getResponse() 
-    {
-        return json_encode(['response' => ['status'=>$this->responseCode, 'message'=>$this->responseMessage, 'token' => $this->jwtToken, 'resource' => $this->resource]]);
-    }*/
 
     /**
      * @param string $errorName

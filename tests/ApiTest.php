@@ -127,4 +127,30 @@ final class ApiTest extends TestCase
         }
     }
 
+    public function test_successful_login(): void
+    {   
+        $loginJson = array(
+            "name"  => "actionLogin",
+            "param" => array(
+                "username"  => "test@email.com",
+                "password"  => "mypassword"
+            )
+        );
+
+        $client = new GuzzleHttp\Client();
+        try {      
+            $response = $client->request('POST', 'localhost/apijwt/index.php', [
+                'json' => $loginJson
+            ]);            
+            $this->assertEquals(200, $response->getStatusCode());
+        } catch (ServerException $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString   = $response->getBody()->getContents();
+            $responseBodyAsObj      = json_decode($responseBodyAsString);
+            //var_dump($responseBodyAsObj);
+            $this->assertEquals(200, $responseBodyAsObj->response->status);
+            $this->assertEquals("Login success", $responseBodyAsObj->response->message);
+        }
+    }
+
 }
