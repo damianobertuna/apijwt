@@ -78,7 +78,36 @@ class Api extends RestJwt {
 
         /* get the resource from the database */
     }
+       
+    /**
+     * Method to handle user authorization change
+     */
+    public function actionChangeAuthorization() {
+        /* Verify that params provided are correct */
+        try {                        
+            $request = $this->validateObj->validateChangeAuthorizationParam();            
+        } catch (Exception $e) {
+            throw new Exception($this->getErrorMessage($e->getMessage()));
+        }
         
+        if ($this->validateToken()) {
+            $username       = $request->param->username;
+            $oldProfile     = $request->param->oldprofile;
+            $newProfile     = $request->param->newprofile;
+
+            $updateResult = $this->databaseObj->changeProfile($username, $oldProfile, $newProfile);
+            if ($updateResult) {
+                $this->responseObj->setStatus(SUCCESS_RESPONSE);
+                $this->responseObj->setMessage("Profile updated");
+                $this->responseObj->setToken($this->jwtToken);
+                return true;
+            }
+
+            $this->responseObj->setStatus(UPDATE_ERROR);
+            throw new Exception($this->getErrorMessage('profile_update_error'));
+        }
+    }
+
     
     /**
      * Method for password changing

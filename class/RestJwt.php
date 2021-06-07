@@ -108,7 +108,7 @@ class RestJwt {
         if (isset($_SERVER['Authorization'])) {
             $headers = trim($_SERVER["Authorization"]);
         }
-        else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+        else if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
             $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
         } elseif (function_exists('apache_request_headers')) {
             $requestHeaders = apache_request_headers();
@@ -178,7 +178,8 @@ class RestJwt {
             'api_new_password_required'     => 'API param new password is required',
             'api_method_invalid'            => 'API does not exist',
             'token_not_found'               => 'Access Token Not found',
-            'password_update_error'         => 'Password update failed'
+            'password_update_error'         => 'Password update failed',
+            'profile_update_error'          => 'Profile update failed'
         );
         return $errorDictionary[$errorName];
     }

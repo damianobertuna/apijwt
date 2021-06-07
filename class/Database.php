@@ -104,4 +104,17 @@ class Database
         }
     }
 
+    public function changeProfile($username, $oldProfile, $newProfile) {
+        $sql        = 'UPDATE user SET profile = :newProfile  WHERE username = :username && profile = :oldProfile';
+        $stmt       = $this->dbconn->prepare($sql);
+        $stmt->bindParam(':username', $username);
+		$stmt->bindParam(':newProfile', $newProfile);
+        $stmt->bindParam(':oldProfile', $oldProfile);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

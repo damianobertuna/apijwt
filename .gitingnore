@@ -5,3 +5,5 @@ composer.lock
 .phpunit.result.cache
 /vendor
 testDb.php
+/DamianoBertuna_ApiJwt
+DamianoBertuna_ApiJwt.zip
