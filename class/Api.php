@@ -9,15 +9,6 @@ class Api extends RestJwt {
         parent::__construct($responseObj);
     }
 
-    /* login example json
-       {
-          "name": "actionLogin",
-          "param": {
-              "username": "test@email.com",
-              "password": "mypassword"
-          }
-       }
-    */
     /**
      * Method to handle login action
      */
@@ -62,14 +53,6 @@ class Api extends RestJwt {
         return true;
     }
 
-    /*  get resource example json
-        {
-           "name": "actionGetResource",
-           "param": {
-               "id": "resource_id"
-           }
-        }
-    */
     /**
      * Method to handle get resource action
      * 
@@ -97,16 +80,6 @@ class Api extends RestJwt {
     }
         
     
-    /*  password change example json         
-        {
-           "name": "actionGetResource",
-           "param": {
-               "username": "test@email.com",
-               "oldPassword": "mypassword",
-               "newPassword": "mypassword"
-           }
-        }
-    */
     /**
      * Method for password changing
      */ 

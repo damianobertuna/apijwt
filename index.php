@@ -9,9 +9,10 @@ try {
 	$api = new Api($responseObj);
 	$api->processApi();
 } catch (PDOException $pdo) {
+	$responseObj->setMessage($pdo->getMessage());
 } catch (Exception $e) {
-	$responseObj->setMessage($e->getMessage());		
-	http_response_code($responseObj->getStatus());
+	$responseObj->setMessage($e->getMessage());
 } finally {
+	http_response_code($responseObj->getStatus());
 	echo $responseObj->toJson();
 }

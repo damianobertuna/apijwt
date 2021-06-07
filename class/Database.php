@@ -25,7 +25,6 @@ class Database
             $this->dbconn = $conn;
         } catch (PDOException $pdo) {
             $this->responseObj->setStatus(DATABASE_CONNECTION_FAILED);
-            $this->responseObj->setMessage($pdo->getMessage());
             throw new PDOException($pdo->getMessage());            
         }
     }
