@@ -13,10 +13,6 @@ class Database
      */
     public function __construct(Response $responseObj)
     {
-        /*global $user;
-        global $password;
-        global $host;
-        global $dbname;*/
         $user               = "root";
         $password           = "1234qwer";
         $dbname             = "apijwt";
