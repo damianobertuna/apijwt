@@ -138,19 +138,56 @@ final class ApiTest extends TestCase
         );
 
         $client = new GuzzleHttp\Client();
-        try {      
-            $response = $client->request('POST', 'localhost/apijwt/index.php', [
-                'json' => $loginJson
-            ]);            
-            $this->assertEquals(200, $response->getStatusCode());
-        } catch (ServerException $e) {
-            $response = $e->getResponse();
-            $responseBodyAsString   = $response->getBody()->getContents();
-            $responseBodyAsObj      = json_decode($responseBodyAsString);
-            //var_dump($responseBodyAsObj);
-            $this->assertEquals(200, $responseBodyAsObj->response->status);
-            $this->assertEquals("Login success", $responseBodyAsObj->response->message);
-        }
+        $response = $client->request('POST', 'localhost/apijwt/index.php', [
+            'json' => $loginJson
+        ]);            
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+    
+
+    public function test_successful_get_resource(): void
+    {   
+        $loginJson = array(
+            "name"  => "actionGetResource",
+            "param" => array(
+                "id"     => "123",                
+            )
+        );
+
+        $client = new GuzzleHttp\Client();
+        $response = $client->request('POST', 'localhost/apijwt/index.php', [
+            'headers'   => [
+                'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjMwODg0NDYsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzA5MjA0Nn0.e1GOxRQqtgnGRMUbtSO-pY4W4GjqBSx1GjtOz_D4Ngk'
+            ],
+            'json' => $loginJson
+        ]);            
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function test_successful_password_change(): void
+    {   
+        $loginJson = array(
+            "name"  => "actionChangePassword",
+            "param" => array(
+                "username"        => "test@email.com",          
+                "oldPassword"     => "mypassword",
+                "newPassword"     => "mypassword",
+            )
+        );
+
+        $client = new GuzzleHttp\Client();
+        $response = $client->request('POST', 'localhost/apijwt/index.php', [
+            'headers'   => [
+                'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjMwODg0NDYsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzA5MjA0Nn0.e1GOxRQqtgnGRMUbtSO-pY4W4GjqBSx1GjtOz_D4Ngk'
+            ],
+            'json' => $loginJson
+        ]);
+        
+        /**
+         * it's possible to check the new password from the database
+         * in order to be sure of the update 
+        */
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
 }
