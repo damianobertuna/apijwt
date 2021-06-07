@@ -31,12 +31,8 @@ define('SECRETE_KEY', 'KEaWrHUFG5*$WIivjIzZ0Cg*');
         return true;
     }
 
-
-    /* Database connection data */
-    /*$user       = "root";
+    $user       = "root";
     $password   = "1234qwer";
     $dbname     = "apijwt";
-    $host       = "localhost";*/
-
-
+    $host       = "localhost";
 */
