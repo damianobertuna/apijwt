@@ -13,6 +13,9 @@ class RestJwt {
     protected $jwtRefreshToken;
     protected $databaseObj;
     protected $responseObj;
+    protected $validateObj;
+    protected $param;
+    protected $serviceName;
 
     /**
      * @param Response $responseObj
@@ -21,7 +24,7 @@ class RestJwt {
     {
         $this->responseObj = $responseObj;
         $this->databaseObj = new Database($responseObj);
-
+        
         if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->responseObj->setStatus(REQUEST_METHOD_NOT_VALID);
             throw new Exception($this->getErrorMessage('ivalid_method'));
@@ -30,35 +33,14 @@ class RestJwt {
         $handler = fopen('php://input', 'r');
         $this->request = stream_get_contents($handler);
         
-        $this->validateRequest();
-    }
-
-    /**
-     * This method validate the request checking the json structure
-     * in order to verify the format
-     */
-    public function validateRequest() 
-    {
-        /*if($_SERVER['CONTENT_TYPE'] !== 'application/json') {
-            $this->throwError(REQUEST_CONTENTTYPE_NOT_VALID, 'Request content type is not valid');
-        }*/
-
-        $data = json_decode($this->request, true);
-
-        if(!isset($data['name']) || $data['name'] == "") {
-            $this->responseObj->setStatus(API_NAME_REQUIRED);
-            throw new Exception($this->getErrorMessage('api_name_required'));
+        $this->validateObj = new ValidateRequest($this->request, $this->databaseObj);
+        try {
+            $data = $this->validateObj->validateNameAndParam($this->param, $this->serviceName);
+            $this->param        = $data["param"];
+            $this->serviceName  = $data["name"];
+        } catch(Exception $e) {
+            throw new Exception($this->getErrorMessage($e->getMessage()));
         }
-        
-        $this->serviceName = $data['name'];
-
-        if(!is_array($data['param'])) {
-            $this->responseObj->setStatus(API_PARAM_REQUIRED);
-            throw new Exception($this->getErrorMessage('api_param_required'));            
-        }
-
-        $this->param = $data['param'];
-        return true;
     }
 
     /**
