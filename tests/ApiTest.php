@@ -99,10 +99,9 @@ final class ApiTest extends TestCase
         try {      
             $res = $client->request('POST', 'localhost/apijwt/index.php', [
                 'headers'   => [
-                    'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjMwMDY4ODAsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzAxMDQ4MH0.py09aiKY4mJYVGYnA87s-RoU6KXJgzjcwYEf170dWPo'
+                    'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjMwODg0NDYsImlzcyI6ImxvY2FsaG9zdCIsImV4cCI6MTYyMzA5MjA0Nn0.e1GOxRQqtgnGRMUbtSO-pY4W4GjqBSx1GjtOz_D4Ngk'
                 ],
-                'json'      => $loginJson,
-                //'cookies'   => $jar,
+                'json'      => $loginJson,                
             ]);
         } catch (ServerException $e) {
             $response = $e->getResponse();

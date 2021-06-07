@@ -36,3 +36,34 @@ define('SECRETE_KEY', 'KEaWrHUFG5*$WIivjIzZ0Cg*');
     $dbname     = "apijwt";
     $host       = "localhost";
 */
+
+/* check if param username exists */
+        /*if (!is_object($request->param) || !property_exists($request->param, 'username')) {
+            $this->responseObj->setStatus(API_PARAM_REQUIRED);
+            throw new Exception($this->getErrorMessage('api_username_required'));            
+        }*/
+        /* check if param password exists */
+        /*if (!is_object($request->param) || !property_exists($request->param, 'password')) {
+            $this->responseObj->setStatus(API_PARAM_REQUIRED);
+            throw new Exception($this->getErrorMessage('api_password_required'));            
+        }*/
+        
+// get username and password from request
+            //$request        = json_decode($this->request);
+            /* check if param username exists */
+            /*if (!is_object($request->param) || !property_exists($request->param, 'username')) {
+                $this->responseObj->setStatus(API_PARAM_REQUIRED);
+                throw new Exception($this->getErrorMessage('api_username_required'));            
+            }*/
+            
+
+            /* check if param oldPassword exists */
+            /*if (!is_object($request->param) || !property_exists($request->param, 'oldPassword')) {
+                $this->responseObj->setStatus(API_PARAM_REQUIRED);
+                throw new Exception($this->getErrorMessage('api_old_password_required'));            
+            }*/
+            /* check if param newPassword exists */
+            /*if (!is_object($request->param) || !property_exists($request->param, 'newPassword') || $request->param->newPassword == '') {
+                $this->responseObj->setStatus(API_PARAM_REQUIRED);
+                throw new Exception($this->getErrorMessage('api_new_password_required'));            
+            }*/

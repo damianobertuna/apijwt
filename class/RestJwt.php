@@ -33,7 +33,7 @@ class RestJwt {
         $handler = fopen('php://input', 'r');
         $this->request = stream_get_contents($handler);
         
-        $this->validateObj = new ValidateRequest($this->request, $this->databaseObj);
+        $this->validateObj = new ValidateRequest($this->request, $this->responseObj);
         try {
             $data = $this->validateObj->validateNameAndParam($this->param, $this->serviceName);
             $this->param        = $data["param"];

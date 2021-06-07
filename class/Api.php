@@ -21,25 +21,16 @@ class Api extends RestJwt {
      */
     public function actionLogin() 
     {
-        /* get username and password from request */
-        $request    = json_decode($this->request);
-        
-        /* check if param username exists */
-        if (!is_object($request->param) || !property_exists($request->param, 'username')) {
-            $this->responseObj->setStatus(API_PARAM_REQUIRED);
-            throw new Exception($this->getErrorMessage('api_username_required'));            
+        /* Verify that params provided are correct */
+        try {                        
+            $request = $this->validateObj->validateActionLoginParam();            
+        } catch (Exception $e) {
+            throw new Exception($this->getErrorMessage($e->getMessage()));
         }
-        $username   = $request->param->username;
-        
-        /* check if param password exists */
-        if (!is_object($request->param) || !property_exists($request->param, 'password')) {
-            $this->responseObj->setStatus(API_PARAM_REQUIRED);
-            throw new Exception($this->getErrorMessage('api_password_required'));            
-        }
+                        
+        $username   = $request->param->username;        
         $password   = $request->param->password;
-
         
-
         if ($username == "" || $password == "") {
             $this->responseObj->setStatus(INVALID_USER_PASS);
             throw new Exception($this->getErrorMessage('invalid_user_password'));
@@ -58,13 +49,10 @@ class Api extends RestJwt {
             throw new Exception($this->getErrorMessage('invalid_user_password'));            
         }
         
-        // create and return JWT token and JWT refresh token        
+        // create and return JWT token and JWT refresh token
         $this->responseObj->setStatus(SUCCESS_RESPONSE);
         $this->responseObj->setMessage("Login success");
         $this->responseObj->setToken($this->generateToken());
-        //$this->responseCode     = SUCCESS_RESPONSE;
-        //$this->responseMessage  = "Login success";
-        //$this->jwtToken         = $this->generateToken();
         $this->jwtRefreshToken  = $this->generateToken(60*60*24*7); /* 604800 seconds = 7 days */
         setcookie("JwtRefreshToken", $this->jwtRefreshToken, 604800, "", "", false, true); /* last true param is for HTTPONLY */
         /* save jwtRefreshToken to database */
@@ -100,10 +88,7 @@ class Api extends RestJwt {
             $this->responseObj->setMessage("Login success");
             $this->responseObj->setToken($this->jwtToken);
             /* before sending the resource we need to check if the user has permission */
-            $this->responseObj->setResource('Here is the resource requested');
-            /*$this->responseCode     = SUCCESS_RESPONSE;
-            $this->responseMessage  = "Valid resource request";*/
-            //$this->resource = "Here is the resource requested";
+            $this->responseObj->setResource('Here is the resource requested');            
         }
 
         /* get the resource from the database */
@@ -119,33 +104,21 @@ class Api extends RestJwt {
                "newPassword": "mypassword"
            }
         }
-    */    
+    */
     /**
      * Method for password changing
      */ 
     public function actionChangePassword() {
+        /* Verify that params provided are correct */
+        try {                        
+            $request = $this->validateObj->validateChangePasswordParam();            
+        } catch (Exception $e) {
+            throw new Exception($this->getErrorMessage($e->getMessage()));
+        }
+
         if ($this->validateToken()) {
-            // get username and password from request
-            $request        = json_decode($this->request);
-            /* check if param username exists */
-            if (!is_object($request->param) || !property_exists($request->param, 'username')) {
-                $this->responseObj->setStatus(API_PARAM_REQUIRED);
-                throw new Exception($this->getErrorMessage('api_username_required'));            
-            }
             $username       = $request->param->username;
-
-            /* check if param oldPassword exists */
-            if (!is_object($request->param) || !property_exists($request->param, 'oldPassword')) {
-                $this->responseObj->setStatus(API_PARAM_REQUIRED);
-                throw new Exception($this->getErrorMessage('api_old_password_required'));            
-            }
             $oldPassword    = $request->param->oldPassword;
-
-            /* check if param newPassword exists */
-            if (!is_object($request->param) || !property_exists($request->param, 'newPassword') || $request->param->newPassword == '') {
-                $this->responseObj->setStatus(API_PARAM_REQUIRED);
-                throw new Exception($this->getErrorMessage('api_new_password_required'));            
-            }
             $newPassword    = $request->param->newPassword;
 
             // check in the database if user is present
@@ -157,8 +130,9 @@ class Api extends RestJwt {
 
             $updateResult = $this->databaseObj->changePassword($username, $oldPassword, $newPassword);
             if ($updateResult) {
-                $this->responseCode     = SUCCESS_RESPONSE;
-                $this->responseMessage  = "Password updated";
+                $this->responseObj->setStatus(SUCCESS_RESPONSE);
+                $this->responseObj->setMessage("Password updated");
+                $this->responseObj->setToken($this->jwtToken);
                 return true;
             }
 

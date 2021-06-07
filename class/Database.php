@@ -11,7 +11,7 @@ class Database
     /**
      * Database constructor.     
      */
-    public function __construct($responseObj)
+    public function __construct(Response $responseObj)
     {
         /*global $user;
         global $password;
